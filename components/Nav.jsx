@@ -7,23 +7,27 @@ import { signIn, signOut, useSession, getProviders } from "next-auth/react"
 import Provider from "./Provider"
 
 const Nav = () => {
-  const {data: session} = useSession()
+  /** NextAuth.js creates a session object in response to a successful sign-in. When a user signs in, 
+  the authentication provider (e.g., Google, Twitter, email sign-in) returns user information to NextAuth.js which on successful sign-in stores in the session object. */
+  const {data: session} = useSession(); // Destructuring the 'data' property from the result of useSession hook
+
+  //**Order of this two useEffects also matter
+  const [providers, setProviders] = useState(null)  
+  useEffect(() => {
+    const setUpProviders = async () => {
+      const response = await getProviders() //the getProviders function fetches information about authentication providers(like Provider Types:Google/facebook/github, Provider Details:client IDs, secrets, and other configuration parameters needed to authenticate users with that specific provider, Authentication Options) from an API endpoint (/api/auth/providers).
+      setProviders(response)
+    }
+    setUpProviders()
+  }, [])
+
+
   const [toggleDropdown, setToggleDropdown] = useState(false)
   const handleClickOutside = (event) => {
     if (toggleDropdown && !event.target.closest('.dropdown')) {
       setToggleDropdown(false);
     }
   };
-  
-  const [providers, setProviders] = useState(null)
-  useEffect(() => {
-    const setProviders = async () => {
-      const response = await getProviders()
-      setProviders(response)
-    }
-    setProviders()
-  }, [])
-
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
@@ -42,12 +46,13 @@ const Nav = () => {
       {/* Desktop Navigation */}
       <div className="sm:flex hidden"> {/* When the screen size reaches the 'medium' breakpoint and going above, the sm:flex class takes effect again, because the 'small' breakpoint no longer applies. This makes the div visible on medium screens and larger. */}
         {session?.user ? (
+        /*  this ?, means we are checking is we do have the session.!? */ 
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">Create Post</Link>
             <button onClick={signOut} className="outline_btn">Sign Out</button>
 
             <Link href="/profile">
-              <Image src="/assets/images/logo.svg" width={37} height={37} className="rounded-full" alt="Profile" />
+              <Image src={session?.user.image} width={37} height={37} className="rounded-full" alt="Profile" />
             </Link>
           </div>
         ) : (
@@ -66,7 +71,13 @@ const Nav = () => {
       {/* Mobile Navigation */}
       <div className="sm:hidden flex relative">
         {session?.user ? ( 
-          <Image src="/assets/images/logo.svg" onClick={() => setToggleDropdown((prev) => !prev)} width={37} height={37} className="rounded-full" alt="Profile" />
+          /*  this ?, means we are checking is we do have the session.!? */ 
+          <Image 
+          src={session?.user.image} /* in next.config.js file, we have added image.domain with this url "lh3.googleusercontent.com", due to which it is able to detect google user images and contents. */
+          onClick={() => setToggleDropdown((prev) => !prev)} 
+          width={37} height={37} 
+          className="rounded-full" 
+          alt="Profile" />
         ): (
           <>
             {providers &&
