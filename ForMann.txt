@@ -1,0 +1,13 @@
+#Project Start
+
+-First installed thses modules.
+npm i bcrypt mongodb mongoose next-auth 
+
+-Then deleted existing app folder (default) and create a new empty app folder
+-Did same with public folder. (delete->create new empty folder)
+-Then we created few folders -> components, models, utils, styles.
+- Finally we created a .env file.
+
+- Created page.jsx(default landing page) and layout.jsx file in app directory.
+- Inside layout.jsx, did few things and export with name RootLayout (changed).
+- in the jscongig.json file, changed "@/*" to "@*", removed slash.
