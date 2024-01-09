@@ -20,20 +20,42 @@ const Feed = () => {
 
   const [searchText, setSearchText] = useState("")
   const [posts, setPosts] = useState([])
-  const handleSearchChange = (e)=>{
-    e.preventDefault()
-    
-  }
+  const [originalPosts, setOriginalPosts] = useState([])
 
   useEffect(()=>{
     const fetchPosts = async()=>{
       const response = await fetch("/api/prompt");
       const data = await response.json()
       setPosts(data)
+      setOriginalPosts(data)
     }
     fetchPosts()
-  }, []) //searchText
+  }, []) 
 
+  const handleSearchChange = (e)=>{
+    e.preventDefault()
+    
+  }
+
+  const tagPosts = async(tag)=>{
+    try {
+      if (tag) { 
+        const response = await fetch(`/api/prompt/tag/${tag.toString()}`)
+        const data = await response.json()
+        setPosts(data)
+        /* Alternatively, 
+        const filteredPosts = posts.filter((p)=> p._id !== post._id)
+        setPosts(filteredPosts) */
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const handleLogoClick = ()=>{
+    setPosts(originalPosts);
+  }
+
+  
   return (
     <section className="feed">
       <form action="relative w-full flex-center">
@@ -45,7 +67,7 @@ const Feed = () => {
         className="search_input peer"
         />
       </form>
-      <PromptCardList data={posts} handleTagClick={()=>{}}/>
+      <PromptCardList data={posts} handleTagClick={tagPosts} />
     </section>
   )
 }
