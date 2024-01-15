@@ -61,8 +61,32 @@ const Feed = () => {
       }, 500)
     );
   };
+  
+/*** 
+Debouncing: 
+  The setTimeout function is used to create a delay of 500 milliseconds (setTimeout(() => {...}, 500)). 
+  This delay acts as a debounce, meaning that the filtering function (filterPrompts) is not immediately executed with every keystroke. 
+  Instead, it waits for the user to stop typing for 500 milliseconds.
 
+Clearing Previous Timeout: 
+  The clearTimeout(searchTimeout) is used to clear any previously set timeouts. 
+  This is crucial because if a user is typing quickly, you want to reset the timer each time they press a key. 
+  If the timer isn't reset, the filtering function would be triggered too soon, and the results might not accurately reflect the final search term.
 
+Here's an example to illustrate the importance of clearing the previous timeout:
+
+  User starts typing: 'ca'
+  Timeout is set for 500ms.
+  User continues typing quickly: 'cat'
+  Before the first timeout (500ms) is reached, another timeout is set for the new input (cat).
+  The first timeout is cleared, and the second timeout is now the active one.
+  User stops typing.
+  After 500ms, the filtering function is called with the final input (cat).
+  If you didn't clear the previous timeout, the filtering function might have been called with the intermediate input (ca), leading to inaccurate search results.
+
+In summary, this code is a common pattern for optimizing search functionality by introducing a delay and ensuring that the filtering operation is triggered only after the user has paused typing for a short period. The clearing of the timeout is essential to handle scenarios where the user continues typing rapidly. 
+
+*/
 
  /** const handleTagClick = async(tag)=>{
     try {
