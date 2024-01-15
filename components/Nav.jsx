@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useState, useEffect, useContext } from "react"
 import { signIn, signOut, useSession, getProviders } from "next-auth/react"
 import Provider from "./Provider"
-import MyContext from "@context/MyContext"
+// import MyContext from "@context/MyContext"
 
 const Nav = () => {
   /** NextAuth.js creates a session object in response to a successful sign-in. When a user signs in, 
@@ -36,15 +36,9 @@ const Nav = () => {
   }, [toggleDropdown]);
 
 
-  const { originalPosts, dispatch } = useContext(MyContext);
-  const handleLogoClick = (e) => {
-    console.log(originalPosts)
-    dispatch({ type: "SET_POSTS", payload: originalPosts });
-  };
-
   return (
     <nav className="flex-between w-full mb-16 pt-3">
-      <Link href="/" onClick={handleLogoClick} className="flex gap-2 flex-center" >
+      <Link href="/" className="flex gap-2 flex-center" >
         <Image src="/assets/images/logo.svg" width={30} height={30} className="object-contain" alt="Promptopia Logo" />
         <p className="logo_text">Promptopia</p>
       </Link>

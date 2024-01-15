@@ -2,8 +2,6 @@
 
 import {useState, useEffect, useContext} from "react"
 import PromptCard from "./PromptCard"
-import MyContext from "@context/MyContext"
-import { fetchPosts } from "@context/MyActions"
 // import Prompt from "@models/prompt" 
 //** You should never import this on client side module, because its not safe and it will create error.
 
@@ -18,8 +16,9 @@ const PromptCardList = ({data, handleTagClick})=>{
 }
 
 const Feed = () => {
-  // const [posts, setPosts] = useState([])
-  const {posts, dispatch} = useContext(MyContext)
+  const [posts, setPosts] = useState([])
+  // const {posts, dispatch} = useContext(MyContext)
+  //Avoid using context on client side apperently because deployed vercel app doesnt handle it. Exact Reason: Avoid client-side-only singletons: Refrain from using context providers that create singletons only accessible on the client-side.
   
   
   // Search states
@@ -29,10 +28,9 @@ const Feed = () => {
 
 
   const getData = async ()=>{
-    const data = await fetchPosts()
-    /***** The moment you get the data[await], dispatch it to set the state. As it is a part of async function, the time to actualy fullfill the promise might vary, so if we use this dispatch function outside, it will run parallely of fetching the result and not sequencially, hence it wont have right data to actually set the value of state.   */
-    dispatch({type: "SET_POSTS", payload: data })
-    /* dispatch({ type: "SET_ORG_POSTS", payload: data }); //the above dispatch could also take some time, so dont use the posts state that you just commanded/dispatched to be updated. Insted use the data which the SET_POSTS is also using */
+    const response = await fetch("/api/prompt");
+    const data = await response.json();
+    setPosts(data)
   }
 
   useEffect(()=>{
