@@ -13,7 +13,7 @@ const MyProfile = () => {
     // means destructure the data, rename it to session.
     const router = useRouter()
 
-    const [posts, setPosts] = useState([])
+    const [myPosts, setMyPosts] = useState([])
 
     const handleEdit = (post)=>{
         router.push(`/update-prompt?id=${post._id}`)
@@ -26,8 +26,8 @@ const MyProfile = () => {
                 await fetch(`/api/prompt/${post._id.toString()}`, {
                     method: "delete"
                 })
-                const filteredPosts = posts.filter((p)=> p._id !== post._id)
-                setPosts(filteredPosts)
+                const filteredPosts = myPosts.filter((item)=> item._id !== post._id)
+                setMyPosts(filteredPosts)
 
             } catch (error) {
                 console.log(error);
@@ -39,18 +39,18 @@ const MyProfile = () => {
         const fetchPosts = async()=>{
             const response = await fetch(`/api/users/${session?.user.id}/posts`);
             const data = await response.json();
-            setPosts(data);
+            setMyPosts(data);
         }
         if (session?.user.id) {
             fetchPosts()
         }
-    }, []) 
+    }, [session?.user.id]) 
 
   return (
     <Profile 
         name="My"
-        desc="Welcome to your personilized Profile page."
-        data={posts}
+        desc="Welcome to your personilized Profile page. Share your exceptional prompts and inspire others with the power of your imagination"
+        data={myPosts}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
 

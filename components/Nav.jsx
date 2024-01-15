@@ -2,9 +2,10 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { signIn, signOut, useSession, getProviders } from "next-auth/react"
 import Provider from "./Provider"
+import MyContext from "@context/MyContext"
 
 const Nav = () => {
   /** NextAuth.js creates a session object in response to a successful sign-in. When a user signs in, 
@@ -14,11 +15,10 @@ const Nav = () => {
   //**Order of this two useEffects also matter
   const [providers, setProviders] = useState(null)  
   useEffect(() => {
-    const setUpProviders = async () => {
-      const response = await getProviders() //the getProviders function fetches information about authentication providers(like Provider Types:Google/facebook/github, Provider Details:client IDs, secrets, and other configuration parameters needed to authenticate users with that specific provider, Authentication Options) from an API endpoint (/api/auth/providers).
-      setProviders(response)
-    }
-    setUpProviders()
+    (async () => {
+      const res = await getProviders();
+      setProviders(res);
+    })();
   }, [])
 
 
@@ -35,9 +35,16 @@ const Nav = () => {
     };
   }, [toggleDropdown]);
 
+
+  const { originalPosts, dispatch } = useContext(MyContext);
+  const handleLogoClick = (e) => {
+    console.log(originalPosts)
+    dispatch({ type: "SET_POSTS", payload: originalPosts });
+  };
+
   return (
     <nav className="flex-between w-full mb-16 pt-3">
-      <Link href="/" className="flex gap-2 flex-center" >
+      <Link href="/" onClick={handleLogoClick} className="flex gap-2 flex-center" >
         <Image src="/assets/images/logo.svg" width={30} height={30} className="object-contain" alt="Promptopia Logo" />
         <p className="logo_text">Promptopia</p>
       </Link>

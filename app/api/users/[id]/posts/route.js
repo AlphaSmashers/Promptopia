@@ -11,6 +11,6 @@ export const GET = async (req, { params }) => {
     // As always again...standard procedure to send data is in JSON formet, as data is often transmitted or stored in the form of strings.
   } catch (error) {
     console.log(error);
-    return new Response("Failed to fetch all prompts", { status: 500 });
+    return new Response("Failed to fetch prompts created by user", { status: 500 });
   }
 };

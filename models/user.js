@@ -1,4 +1,5 @@
-import mongoose, { Schema, model, models } from "mongoose";
+import mongoose from "mongoose";
+import { Schema, model, models } from "mongoose";
 
 // If there is error then change the below new Schema to newSchema
 const UserSchema = new Schema({

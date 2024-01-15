@@ -32,7 +32,7 @@ const EditPrompt = () => {
     const updatePrompt = async(e)=>{
         e.preventDefault()
         setSubmitting(true)
-        if (!promptId) return alert("Prompt ID not found.")
+        if (!promptId) return alert("Missing PromptId!")
         try{
             const response = await fetch(`/api/prompt/${promptId}`, {
                 method: "PATCH",
